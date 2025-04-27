@@ -2,6 +2,7 @@
 #include "GK2025-MedianCut.h"
 #include "GK2025-Zmienne.h"
 #include "GK2025-Funkcje.h"
+#unclude "GK2025-Paleta.h"
 
 using namespace std;
 
@@ -26,6 +27,7 @@ void paletaMedianCutBW(){
   }
  SDL_UpdateWindowSurface(window);
 }
+
 
 Uint8 najwiekszaRoznica(int start, int koniec){
     int minR = start, minG = start, minB = start;
@@ -86,3 +88,41 @@ void MedianCut(int start, int koniec, int iteracja){
         MedianCut(srodek, koniec, iteracja - 1);
     }
 }
+
+void MedianCutBW(int start, int koniec, int iteracja) {
+    for (int i = 0; i < iteracja; i++) cout << " ";
+    cout << "start: " << start << ", koniec: " << koniec << ", iteracja: " << iteracja << endl;
+    if (iteracja > 0) {
+            for (int i = 0; iteracja; i++) cout << " ";
+            count << "Dzielimy kubelek na poziomie " << iteracja << endl;
+            int srodek = (start + koniec + 1) / 2;
+            
+            MedianCutBW(start, srodek - 1; iteracja - 1);
+            MedianCutBW(srodek, koniec; iteracja - 1);
+    }
+    else {
+        //Paleta z uśrednionymi wartościami z kubełków
+        int sumaBW = 0;
+        for (int p = start; p < = koniec; p++) {
+            sumaBW += obrazekS[p];
+        }
+        Uint8 noweBW = sumaBW / (koniec + 1 - start);
+        SDL_Color nowyKolor = {noweBW, noweBW, noweBW};
+        paleta8s[ileKubelkow] = nowyKolor;
+
+        count << "Kubelek " << ileKubelkow << ": ";
+        count << "(s: " << start << ", k: " << koniec << ", e: " << (koniec + 1 - start) << ")" << endl;
+        ileKubelkow++;
+    }
+}
+
+void czyscPalete(){
+  for(int k=0; k<ileKolorow; k++)
+      paleta8[k] = {0, 0, 0);
+  ileKolorow = 0;
+  for(int k=0; k<256; k++){
+      paleta8s[k] = {0, 0, 0};
+      paleta8k[k] = {0, 0, 0};
+  }
+}
+
