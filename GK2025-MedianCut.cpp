@@ -2,7 +2,7 @@
 #include "GK2025-MedianCut.h"
 #include "GK2025-Zmienne.h"
 #include "GK2025-Funkcje.h"
-#unclude "GK2025-Paleta.h"
+#include "GK2025-Paleta.h"
 
 using namespace std;
 
