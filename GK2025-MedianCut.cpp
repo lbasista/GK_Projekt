@@ -27,3 +27,34 @@ void paletaMedianCutBW(){
  SDL_UpdateWindowSurface(window);
 }
 
+Uint8 najwiekszaRoznica(int start, int koniec){
+    int minR = start, minG = start, minB = start;
+    int maxR = start, maxG = start, maxB = start;
+    
+    Uint8 roznica = 0;
+    
+    for (int i = start; i <= koniec; i++){
+        if (obrazekK[i].b < obrazekK[minB].b) minB = i;
+        if (obrazekK[i].g < obrazekK[minG].g) minG = i;
+        if (obrazekK[i].r < obrazekK[minR].r) minR = i;
+        if (obrazekK[i].b < obrazekK[maxB].b) maxB = i;
+        if (obrazekK[i].g < obrazekK[maxG].g) maxG = i;
+        if (obrazekK[i].r < obrazekK[maxR].r) maxR = i;
+    }
+    
+    int roznicaR = obrazekK[maxR].r-obrazekK[minR].r;
+    int roznicaG = obrazekK[maxG].g-obrazekK[minG].g;
+    int roznicaR = obrazekK[maxB].b-obrazekK[minB].b;
+    std::cout << "roznice: (R: " << RoznicaR << ", G: " << roznicaG << ", B" << roznicaB << ")\n";
+    
+    int roznicaM = max(max(roznicaR, roznicaG), roznicaB);
+    
+    if (roznicaM == roznicaR)
+        roznica = 2; //R
+    else if (roznicaM == roznicaG)
+        roznica = 2; //G
+    else
+        roznica = 3; //B
+        
+    return roznica;
+}
