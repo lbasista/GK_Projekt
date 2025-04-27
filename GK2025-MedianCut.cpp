@@ -138,3 +138,23 @@ void czyscPalete(){
       paleta8k[k] = {0, 0, 0};
   }
 }
+
+int znajdzSasiada(SDL_Color kolor) {
+    int minimum = 999999;
+    int indexMinimum;
+    
+    SDL_Color kolorPaleta;
+    float odleglosc;
+    
+    for (int i = 0; i < 256; i++) {
+        kolorPaleta = paleta8k[i];
+        odleglosc = sqrt((kolor.r - kolorPaleta.r) * (kolor.r - kolorPaleta.r) + 
+                         (kolor.g - kolorPaleta.g) * (kolor.g- kolorPaleta.g) + 
+                         (kolor.b - kolorPaleta.b) * (kolor.b - kolorPaleta.b));
+        if (odleglosc < minimum) {
+            minimum = odleglosc;
+            indexMinimum = i;
+        }
+    }
+    return indexMinimum;
+}
