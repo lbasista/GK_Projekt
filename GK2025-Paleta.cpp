@@ -307,13 +307,13 @@ void paletaMedianCutBW(){
   ileKubelkow = 0;
   ileKolorow = 0;
   czyscPalete();
-  SDL_COLOR kolor;
+  SDL_Color kolor;
 
   int szary = 0;
   int numer = 0;
   int indeks = 0;
 
-  MedianCutBW(0, numer-1, 3);
+ MedianCutBW(0, numer-1, 3);
 
   for(int y=0; y<wysokosc/2; y++){
      for(int x=0; x<szerokosc/2; x++){
@@ -332,7 +332,7 @@ void narysujPalete3b(int px, int py, SDL_Color pal3b[]) {
     for (int k = 0; k < 8; k++) {
         y = k / 32;
         x = k % 32;
-    
+
         for (int xx = 0; xx < 40; xx++) {
             for (int xx = 0; xx < 40; xx++) {
                 setPixel(x * 40 + xx + px, y * 40 + yy + py, pal3b[k].g, pal3b[k].b);
