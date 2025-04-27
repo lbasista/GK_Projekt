@@ -3,5 +3,6 @@
 #define GK2025_MEDIANCUT_H_INCLUDED
 
 #include <SDL2/SDL.h>
+paletaMedianCutBW();
 
 #endif // GK2025_MEDIANCUT_H_INCLUDED
