@@ -48,8 +48,7 @@ void Funkcja6() {
 
 void Funkcja7() {
 
-    //...
-
+    paletaMedianCutBW();
     SDL_UpdateWindowSurface(window);
 }
 
