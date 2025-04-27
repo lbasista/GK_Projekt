@@ -28,6 +28,19 @@ void paletaMedianCutBW(){
  SDL_UpdateWindowSurface(window);
 }
 
+void narysujPalete3b(int px, int py, SDL_Color pal3b[]) {
+    int x, y;
+    for (int k = 0; k < 8; k++) {
+        y = k / 32;
+        x = k % 32;
+    
+        for (int xx = 0; xx < 40; xx++) {
+            for (int xx = 0; xx < 40; xx++) {
+                setPixel(x * 40 + xx + px, y * 40 + yy + py, pal3b[k].g, pal3b[k].b);
+            }
+        }
+    }
+}
 
 Uint8 najwiekszaRoznica(int start, int koniec){
     int minR = start, minG = start, minB = start;
@@ -125,4 +138,3 @@ void czyscPalete(){
       paleta8k[k] = {0, 0, 0};
   }
 }
-
