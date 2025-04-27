@@ -77,7 +77,7 @@ void MedianCut(int start, int koniec, int iteracja){
             case 3: 
                 std::cout << "sortujemy wedlug B" << std::endl;
                 break;
-        }
+        } 
         
         for (int i = 0; i < iteracja; i++) std::cout << " ";
         std::cout << "Dzielimy kubelek na poziomie: " << iteracja << endl;
@@ -86,7 +86,28 @@ void MedianCut(int start, int koniec, int iteracja){
         
         MedianCut(start, srodek - 1, iteracja + 1);
         MedianCut(srodek, koniec, iteracja - 1);
-    }
+        
+        } else {
+            int sumaR = 0, sumaG = 0, sumaB = 0;
+            for (int p = start; p <= koniec; p++){
+                sumaR += obrazek[p].r;
+                sumaG += obrazek[p].g;
+                sumaB += obrazek[p].b;
+            }
+            int sredniaR = sumaR / (koniec + 1 - start);
+            int sredniaG = sumaG / (koniec + 1 - start);
+            int sredniaB = sumaB / (koniec + 1 - start);
+            
+            SDL_Color nowyKolor = {sredniaR, sredniaG, sredniaB};
+            paleta8k[ileKubelkow] = nowyKolor;
+            
+            std::cout << "Kubelek " << ileKubelkow << ": ";
+            std::cout << "(s: " << start << ", k: " << koniec << ", e:" << (koniec + 1 - start) << ")";
+            std::cout << std::endl;
+            
+            std::cout << "Kolor " << ileKubelkow << ": (" << (int)nowyKolor.r << ", ";
+            std::cout << (int)nowyKolor.g << ", " << (int)nowyKolor.b << ")" << std::endl;
+        }
 }
 
 void sortujKubelek(int start, int koniec, Uint8 sortowanie) {
