@@ -89,6 +89,27 @@ void MedianCut(int start, int koniec, int iteracja){
     }
 }
 
+void sortujKubelek(int start, int koniec, Uint8 sortowanie) {
+    int minimum;
+    for (int p = start; p <= koniec; p++){
+        minimum = p;
+        for (int i = p; i <= koniec; i++){
+            switch(sortowanie){
+                case 1:
+                    if (obrazekK[i].r < obrazekK[minimum].r) minimum = i;
+                    break;
+                case 2:
+                    if (obrazekK[i].g < obrazekK[minimum].g) minimum = i;
+                    break;
+                case 3:
+                    if (obrazekK[i].b < obrazekK[minimum].b) minimum = i;
+                    break;
+            }
+        }
+        swap(obrazekK[p], obrazekK[minimum]);
+    }
+}
+
 void MedianCutBW(int start, int koniec, int iteracja) {
     for (int i = 0; i < iteracja; i++) cout << " ";
     cout << "start: " << start << ", koniec: " << koniec << ", iteracja: " << iteracja << endl;
