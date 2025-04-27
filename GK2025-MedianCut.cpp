@@ -2,6 +2,7 @@
 #include "GK2025-MedianCut.h"
 #include "GK2025-Zmienne.h"
 #include "GK2025-Funkcje.h"
+#unclude "GK2025-Paleta.h"
 
 using namespace std;
 
@@ -25,5 +26,15 @@ void paletaMedianCutBW(){
     }
   }
  SDL_UpdateWindowSurface(window);
+}
+
+void czyscPalete(){
+  for(int k=0; k<ileKolorow; k++)
+      paleta8[k] = {0, 0, 0);
+  ileKolorow = 0;
+  for(int k=0; k<256; k++){
+      paleta8s[k] = {0, 0, 0};
+      paleta8k[k] = {0, 0, 0};
+  }
 }
 
