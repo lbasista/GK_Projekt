@@ -58,3 +58,31 @@ Uint8 najwiekszaRoznica(int start, int koniec){
         
     return roznica;
 }
+
+void MedianCut(int start, int koniec, int iteracja){
+    for(int i = 0; i < iteracja; i++) std::cout << " ";
+    std::cout << "start: " << start << ", koniec: " << koniec << ", iteracja: " << iteracja << std::endl;
+    if (iteracja > 0){
+            
+        Uint8 sortowanie = najwiekszaRoznica(start, koniec);
+        switch(sortowanie){
+            case 1: 
+                std::cout << "sortujemy wedlug R" << std::endl;
+                break;
+            case 2: 
+                std::cout << "sortujemy wedlug G" << std::endl;
+                break;
+            case 3: 
+                std::cout << "sortujemy wedlug B" << std::endl;
+                break;
+        }
+        
+        for (int i = 0; i < iteracja; i++) std::cout << " ";
+        std::cout << "Dzielimy kubelek na poziomie: " << iteracja << endl;
+        
+        int srodek = (start + koniec + 1) / 2;
+        
+        MedianCut(start, srodek - 1, iteracja + 1);
+        MedianCut(srodek, koniec, iteracja - 1);
+    }
+}
