@@ -5,6 +5,25 @@
 
 using namespace std;
 
-// test3
+void paletaMedianCutBW(){
+  ileKubelkow = 0;
+  ileKolorow = 0;
+  czyscPalete();
+  SDL_COLOR kolor;
 
-//test
+  int szary = 0;
+  int numer = 0;
+  int indeks = 0;
+
+  for(int y=0; y<wysokosc/2; y++){
+     for(int x=0; x<szerokosc/2; x++){
+        kolor = getPixel(x, y);
+        szary = 0.299*kolor.r + 0.587*kolor.g + 0.114*kolor.b;
+        obrazekS[numer] = szary;
+        setPixel(x + szerokosc/2, y, szary, szary, szary);
+        numer++;
+    }
+  }
+ SDL_UpdateWindowSurface(window);
+}
+
