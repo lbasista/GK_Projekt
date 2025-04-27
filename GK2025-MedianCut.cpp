@@ -27,3 +27,29 @@ void paletaMedianCutBW(){
  SDL_UpdateWindowSurface(window);
 }
 
+void MedianCutBW(int start, int koniec, int iteracja) {
+    for (int i = 0; i < iteracja; i++) cout << " ";
+    cout << "start: " << start << ", koniec: " << koniec << ", iteracja: " << iteracja << endl;
+    if (iteracja > 0) {
+            for (int i = 0; iteracja; i++) cout << " ";
+            count << "Dzielimy kubelek na poziomie " << iteracja << endl;
+            int srodek = (start + koniec + 1) / 2;
+            
+            MedianCutBW(start, srodek - 1; iteracja - 1);
+            MedianCutBW(srodek, koniec; iteracja - 1);
+    }
+    else {
+        //Paleta z uśrednionymi wartościami z kubełków
+        int sumaBW = 0;
+        for (int p = start; p < = koniec; p++) {
+            sumaBW += obrazekS[p];
+        }
+        Uint8 noweBW = sumaBW / (koniec + 1 - start);
+        SDL_Color nowyKolor = {noweBW, noweBW, noweBW};
+        paleta8s[ileKubelkow] = nowyKolor;
+
+        count << "Kubelek " << ileKubelkow << ": ";
+        count << "(s: " << start << ", k: " << koniec << ", e: " << (koniec + 1 - start) << ")" << endl;
+        ileKubelkow++;
+    }
+}
