@@ -8,5 +8,6 @@
 #include <SDL2/SDL.h>
 
 void zapiszPlikv0();
+void odczytajPlik8();
 
 #endif // GK2025_PLIKI_H_INCLUDED
