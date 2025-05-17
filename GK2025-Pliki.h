@@ -8,3 +8,5 @@
 #include <SDL2/SDL.h>
 
 #endif // GK2025_PLIKI_H_INCLUDED
+
+void odczytajPlik();

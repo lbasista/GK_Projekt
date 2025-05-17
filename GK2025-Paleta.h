@@ -1,4 +1,4 @@
-// funkcje do redukcji kolorów i tworzenia palet
+// funkcje do redukcji kolorÃ³w i tworzenia palet
 #ifndef GK2025_PALETA_H_INCLUDED
 #define GK2025_PALETA_H_INCLUDED
 #include <stdio.h>
@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <cmath>
+#include "GK2025-MedianCut.h"
 using namespace std;
 
 void narzuconaV1();
@@ -20,4 +21,6 @@ SDL_Color z5KSdo24K(Uint8 szary5bit);
 void narzucona5KS();
 void narysujPalete5KS(int px, int py, int rozmiarBloku);
 
+void paletaMedianCutBW();
+void narysujPalete3b(int px, int py, SDL_Color pal3b[]);
 #endif // GK2025_PALETA_H_INCLUDED
