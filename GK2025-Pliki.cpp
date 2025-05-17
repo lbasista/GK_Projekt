@@ -5,7 +5,6 @@
 #include "GK2025-MedianCut.h"
 #include "GK2025-Pliki.h"
 
-
 void odczytajPlik() {
     SDL_Color kolor;
     Uint16 szerokoscObrazka = 0;
@@ -25,6 +24,13 @@ void odczytajPlik() {
     cout << "szerokosc: " << wysokoscObrazka << endl;
     cout << "wysokosc: " << szerokoscObrazka << endl;
     cout << "ile bitow: " << ileBitow << endl;
+    
+    for (int y=0; y<wysokoscObrazka; y++) {
+        for (int x=0; x<szerokoscObrazka; x++) {
+            wejscie.read((char*)&kolor, sizeof(Uint8)*3);
+            setPixel(x+(szerokosc/2), y, kolor.r, kolor.g, kolor.b);
+        }
+    }
 
-    SDL_UpdateWindowSurface
+    SDL_UpdateWindowSurface(window);
 }
