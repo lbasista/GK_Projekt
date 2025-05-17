@@ -30,3 +30,35 @@ void zapiszPlikv0(){
 
     SDL_UpdateWindowSurface(window);
 }
+
+void odczytajPlik8(){
+    SDL_Kolor kolor;
+    Uint8 kolor8bit = 0;
+    Uint16 szerokoscObrazka = 0;
+    Uint16 wysokoscObrazka = 0;
+    Uint8 ileBitow = 0;
+    char identyfikator[] = "  ";
+
+    std::cout << "Odczytujemy plik 'obraz8.bin' uzywajac metody read()" std::endl;
+
+    ifstream wejscie("obraz8.bin", ios::binary);
+
+    wejscie.read((chart*)&identyfikator, sizeof(char) + 2);
+    wejscie.read((chart*)&szerokoscObrazka, sizeof(Uint16));
+    wejscie.read((chart*)&wysokoscObrazka, sizeof(Uint16);
+    wejscie.read((chart*)&ileBitow, sizeof(Uint8));
+
+    std::cout << "id: " << identyfikator << std::endl;
+    std::cout << "szerokosc: " << szerokoscObrazka << std::endl;
+    std::cout << "wysokosc: " << wysokoscObrazka << std::endl;
+    std::cout << "ile bitow: " <<(int)ileBitow << std::endl;
+
+    for (int y = 0; y < wysokoscObrazka; y++)
+        for (int x = 0; x < szerokoscObrazka; x++){
+            wejscie.read((char*)&kolor8bit, sizeof(Uint8));
+            kolor = z8Kdo24K(kolor8bit);
+            setPixel(x + (szerokosc / 2), y, kolor.r, kolor.g, kolor. b);
+        }
+
+    SDL_UpdateWindowSurface(window);
+}
