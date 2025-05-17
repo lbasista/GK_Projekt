@@ -7,4 +7,7 @@
 #include <fstream>
 #include <SDL2/SDL.h>
 
+// Czesc Arturka
+void zapisPlik();
+
 #endif // GK2025_PLIKI_H_INCLUDED
