@@ -5,7 +5,6 @@
 #include "GK2025-MedianCut.h"
 #include "GK2025-Pliki.h"
 
-
 void odczytajPlik() {
     SDL_Color kolor;
     Uint16 szerokoscObrazka = 0;
@@ -26,5 +25,38 @@ void odczytajPlik() {
     cout << "wysokosc: " << szerokoscObrazka << endl;
     cout << "ile bitow: " << ileBitow << endl;
 
-    SDL_UpdateWindowSurface
+    for (int y=0; y<wysokoscObrazka; y++) {
+        for (int x=0; x<szerokoscObrazka; x++) {
+            wejscie.read((char*)&kolor, sizeof(Uint8)*3);
+            setPixel(x+(szerokosc/2), y, kolor.r, kolor.g, kolor.b);
+        }
+    }
+
+    SDL_UpdateWindowSurface(window);
+}
+
+void zapiszPlik8() {
+    SDL_Color kolor;
+    Uint8 kolor8bit;
+    Uint16 szerokoscObrazka = szerokosc/2;
+    Uint16 wysokoscObrazka = wysokosc/2;
+    Uint8 ileBitow = 8;
+    char identyfikator[] = "DG"
+
+    cout<<"Zapisujemy plik 'obraz8.bin' uzywajac metody write()"<<endl;
+    ofstream wyjscie("obraz8.bin", ios:binary);
+    wyjscie.write((char*)&identyfikator, sizeof());
+    wyjscie.write((char*)&szerokoscObrazka, sizeof());
+    wyjscie.write((char*)&wysokoscObrazka, sizeof());
+    wyjscie.write((char*)&ileBitow, sizeof());
+
+    for (int y=0; y<wysokoscObrazka; y++) {
+        for (int x=0; x<szerokoscObrazka; x++) {
+            kolor = getPixel(x, y);
+            kolor8bit = z24Kdo8K(kolor);
+            wyjscie.write((char*)&kolor8bit, sizeof(Uint8));
+        }
+    }
+    wyjscie.close();
+    SDL_UpdateWindowSurface(window);
 }
