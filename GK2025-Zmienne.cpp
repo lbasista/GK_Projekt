@@ -12,5 +12,4 @@ SDL_Color paleta8s[256];
 
 int ileKubelkow = 0;
 Uint8 obrazekS[320*200];
-SDL_Color obrazek[320*200];
-
+SDL_Color obrazekK[320*200];
