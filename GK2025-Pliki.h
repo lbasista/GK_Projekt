@@ -1,3 +1,5 @@
+#endif // GK2025_PLIKI_H_INCLUDED
+=======
 // funkcje do operacji na plikach
 #ifndef GK2025_PLIKI_H_INCLUDED
 #define GK2025_PLIKI_H_INCLUDED
