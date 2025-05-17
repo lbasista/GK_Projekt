@@ -7,6 +7,8 @@
 #include <fstream>
 #include <SDL2/SDL.h>
 
+void zapiszPlikv0();
+
 // Czesc Arturka
 void zapisPlik();
 
