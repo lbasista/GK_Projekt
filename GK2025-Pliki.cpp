@@ -37,8 +37,6 @@ void zapiszPlik(){
 
 }
 
-
-
 void zapiszPlikv0(){
     SDL_Color kolor;
     Uint16 szerokoscObrazka = szerokosc / 2;
