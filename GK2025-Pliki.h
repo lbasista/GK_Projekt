@@ -7,6 +7,6 @@
 #include <fstream>
 #include <SDL2/SDL.h>
 
-#endif // GK2025_PLIKI_H_INCLUDED
+void zapiszPlikv0();
 
-void odczytajPlik();
+#endif // GK2025_PLIKI_H_INCLUDED

@@ -5,32 +5,28 @@
 #include "GK2025-MedianCut.h"
 #include "GK2025-Pliki.h"
 
-void odczytajPlik() {
+
+void zapiszPlikv0(){
     SDL_Color kolor;
-    Uint16 szerokoscObrazka = 0;
-    Uint16 wysokoscObrazka = 0;
-    Uint8 ileBitow = 0;
-    char identyfikator[] = "  ";
+    Uint16 szerokoscObrazka = szerokosc / 2;
+    Uint16 wysokoscObrazka = wysokosc / 2;
+    Uint8 ileBitow = 24;
 
-    cout << "Odczytujemy plik 'obrazRGB.bin' uzywajac metody read()";
-    ifstream wejscie("obrazRGB.bin", ios::binary);
+    std::cout << "Zapisujemy plik 'obraz.bin' uzywajac operatora <<" << std::endl;
+    ofstream wyjscie("obraz.bin");
 
-    wejscie.read((char*)&identyfikator, sizeof(char)*2);
-    wejscie.read((char*)&szerokoscObrazka, sizeof(Uint16));
-    wejscie.read((char*)&wysokoscObrazka, sizeof(Uint16));
-    wejscie.read((char*)&ileBitow, sizeof(Uint8));
+    wyjscie << "DG";
+    wyjscie << (Uint8)(szerokoscObrazka) << (Uint8)(szerokoscObrazka >> 8);
+    wyjscie << (Uint8)(wysokoscObrazka) << (Uint8)(wysokoscObrazka >> 8);
+    wyjscie << ileBitow;
 
-    cout << "id: " << identyfikator << endl;
-    cout << "szerokosc: " << wysokoscObrazka << endl;
-    cout << "wysokosc: " << szerokoscObrazka << endl;
-    cout << "ile bitow: " << ileBitow << endl;
-    
-    for (int y=0; y<wysokoscObrazka; y++) {
-        for (int x=0; x<szerokoscObrazka; x++) {
-            wejscie.read((char*)&kolor, sizeof(Uint8)*3);
-            setPixel(x+(szerokosc/2), y, kolor.r, kolor.g, kolor.b);
-        }
-    }
+    for(int y = 0; y < wysokoscObrazka; y++)
+        for(int x = 0; x < szerokoscObrazka; x++){
+            kolor = getPixel(x,y);
+            wyjscie << kolor.r << kolor.g << kolor.b;
+            }
+
+    wyjscie.close();
 
     SDL_UpdateWindowSurface(window);
 }
