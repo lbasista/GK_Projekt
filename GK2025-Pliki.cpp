@@ -94,21 +94,21 @@ void odczytajPlik() {
 
 
 void odczytajPlik8(){
-    SDL_Kolor kolor;
+    SDL_Color kolor;
     Uint8 kolor8bit = 0;
     Uint16 szerokoscObrazka = 0;
     Uint16 wysokoscObrazka = 0;
     Uint8 ileBitow = 0;
     char identyfikator[] = "  ";
 
-    std::cout << "Odczytujemy plik 'obraz8.bin' uzywajac metody read()" std::endl;
+    std::cout << "Odczytujemy plik 'obraz8.bin' uzywajac metody read()" << std::endl;
 
     ifstream wejscie("obraz8.bin", ios::binary);
 
-    wejscie.read((chart*)&identyfikator, sizeof(char) + 2);
-    wejscie.read((chart*)&szerokoscObrazka, sizeof(Uint16));
-    wejscie.read((chart*)&wysokoscObrazka, sizeof(Uint16);
-    wejscie.read((chart*)&ileBitow, sizeof(Uint8));
+    wejscie.read((char*)&identyfikator, sizeof(char) + 2);
+    wejscie.read((char*)&szerokoscObrazka, sizeof(Uint16));
+    wejscie.read((char*)&wysokoscObrazka, sizeof(Uint16));
+    wejscie.read((char*)&ileBitow, sizeof(Uint8));
 
     std::cout << "id: " << identyfikator << std::endl;
     std::cout << "szerokosc: " << szerokoscObrazka << std::endl;
@@ -134,7 +134,7 @@ void zapiszPlik8() {
     char identyfikator[] = "DG"
 
     cout<<"Zapisujemy plik 'obraz8.bin' uzywajac metody write()"<<endl;
-    ofstream wyjscie("obraz8.bin", ios:binary);
+    ofstream wyjscie("obraz8.bin", std::ios_base::binary);
     wyjscie.write((char*)&identyfikator, sizeof());
     wyjscie.write((char*)&szerokoscObrazka, sizeof());
     wyjscie.write((char*)&wysokoscObrazka, sizeof());

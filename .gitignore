@@ -32,3 +32,8 @@
 *.out
 *.app
 
+/SDL2/
+!/GK2025-Projekt.cbp
+!/GK2025-Projekt.depend
+
+!/GK2025-Projekt.layout
