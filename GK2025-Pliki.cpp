@@ -132,7 +132,7 @@ void odczytajPlik8(){
     for (int y = 0; y < wysokoscObrazka; y++)
         for (int x = 0; x < szerokoscObrazka; x++){
             wejscie.read((char*)&kolor8bit, sizeof(Uint8));
-            kolor = z8Kdo24K(kolor8bit);
+            kolor = z5KSdo24K(kolor8bit);
             setPixel(x + (szerokosc / 2), y, kolor.r, kolor.g, kolor. b);
         }
     SDL_UpdateWindowSurface(window);
@@ -156,7 +156,7 @@ void zapiszPlik8() {
     for (int y=0; y<wysokoscObrazka; y++) {
         for (int x=0; x<szerokoscObrazka; x++) {
             kolor = getPixel(x, y);
-            kolor8bit = z24Kdo8K(kolor);
+            kolor8bit = z24Kdo5KS(kolor);
             wyjscie.write((char*)&kolor8bit, sizeof(Uint8));
         }
     }
