@@ -5,11 +5,49 @@
 #include "GK2025-MedianCut.h"
 #include "GK2025-Pliki.h"
 
+void zapiszPlik(){
+    SDL_Color kolor;
+    Uint16 szerokoscObrazka = szerokosc / 2;
+    Uint16 wysokoscObrazka = wysokosc / 2;
+    //Uint8  ileBitow = 24;
+    Uint8  ileBitow = 5; //Format r2g2b1
+
+    char identyfikator[] = "DG";
+
+    cout << "Zapisujemy plik 'obrazRGB.bin' uzywajac metody write()" << endl;
+    ofstream wyjscie ('obrazRGB.bin', ios::binary);
+    wyjscie.write((char*)&identyfikator, sizeof(char)*2);
+    wyjscie.write((char*)&szerokoscObrazka, sizeof(Uint16));
+    wyjscie.write((char*)&wysokoscObrazka, sizeof(Uint16));
+    wyjscie.write((char*)&ileBitow, sizeof(Uint8));
+
+    for (int y=0; y<wysokoscObrazka; y++) {
+        for (int x=0; x<wysokoscObrazka; x++) {
+            kolor = getPixel(x,y);
+            //wyjscie.write((char*)&kolor, sizeof(Uint8)*3);
+
+            //wyjscie.write((char*)&kolor.r, sizeof(Uint8));
+            //wyjscie.write((char*)&kolor.g, sizeof(Uint8));
+            //wyjscie.write((char*)&kolor.b, sizeof(Uint8));
+
+            //Redukcja do r2g2b1
+            Uint8 kolor5bit = ((kolor.r >> 6) << 4) | ((kolor.g >> 6) << 2) | (kolor.b >> 7);
+            wyjscie.write((char*)&kolor5bit, sizeof(Uint8));
+        }
+    }
+
+    wyjscie.close();
+
+    SDL_UpdateWindowSurface(window);
+
+}
+
 void zapiszPlikv0(){
     SDL_Color kolor;
     Uint16 szerokoscObrazka = szerokosc / 2;
     Uint16 wysokoscObrazka = wysokosc / 2;
-    Uint8 ileBitow = 24;
+    //Uint8 ileBitow = 24;
+    Uint8 ileBitow = 5;
 
     std::cout << "Zapisujemy plik 'obraz.bin' uzywajac operatora <<" << std::endl;
     ofstream wyjscie("obraz.bin");
@@ -22,8 +60,13 @@ void zapiszPlikv0(){
     for(int y = 0; y < wysokoscObrazka; y++)
         for(int x = 0; x < szerokoscObrazka; x++){
             kolor = getPixel(x,y);
-            wyjscie << kolor.r << kolor.g << kolor.b;
+            //wyjscie << kolor.r << kolor.g << kolor.b;
+            Uint8 kolor5bit = ((kolor.r >> 6) << 4) | ((kolor.g >> 6) << 2) | (kolor.b >> 7);
+            wyjscie << kolor5bit;
             }
+
+    wyjscie.close();
+
     SDL_UpdateWindowSurface(window);
 }
 
@@ -49,10 +92,55 @@ void odczytajPlik() {
 
     for (int y=0; y<wysokoscObrazka; y++) {
         for (int x=0; x<szerokoscObrazka; x++) {
-            wejscie.read((char*)&kolor, sizeof(Uint8)*3);
-            setPixel(x+(szerokosc/2), y, kolor.r, kolor.g, kolor.b);
+            //wejscie.read((char*)&kolor, sizeof(Uint8)*3);
+            Uint8 kolor5bit;
+            wejscie.read((char*)&kolor5bit, sizeof(Uint8));
+
+            //Odtwarzanie 24-bit z 5-bit
+            Uint8 r2 = (kolor5bit >> 4) & 0x03;
+            Uint8 g2 = (kolor5bit >> 2) & 0x03;
+            Uint8 b1 = kolor5bit & 0x01;
+
+            kolor.r = r2 * 85; //0, 85, 170, 255
+            kolor.g = g2 * 85;
+            kolor.b = b1 * 255;
+
+            setPixel(x + (szerokosc / 2), y, kolor.r, kolor.g, kolor.b);
         }
     }
+
+    SDL_UpdateWindowSurface(window);
+}
+
+
+void odczytajPlik8(){
+    SDL_Color kolor;
+    Uint8 kolor8bit = 0;
+    Uint16 szerokoscObrazka = 0;
+    Uint16 wysokoscObrazka = 0;
+    Uint8 ileBitow = 0;
+    char identyfikator[] = "  ";
+
+    std::cout << "Odczytujemy plik 'obraz8.bin' uzywajac metody read()" << std::endl;
+
+    ifstream wejscie("obraz8.bin", ios::binary);
+
+    wejscie.read((char*)&identyfikator, sizeof(char) + 2);
+    wejscie.read((char*)&szerokoscObrazka, sizeof(Uint16));
+    wejscie.read((char*)&wysokoscObrazka, sizeof(Uint16));
+    wejscie.read((char*)&ileBitow, sizeof(Uint8));
+
+    std::cout << "id: " << identyfikator << std::endl;
+    std::cout << "szerokosc: " << szerokoscObrazka << std::endl;
+    std::cout << "wysokosc: " << wysokoscObrazka << std::endl;
+    std::cout << "ile bitow: " <<(int)ileBitow << std::endl;
+
+    for (int y = 0; y < wysokoscObrazka; y++)
+        for (int x = 0; x < szerokoscObrazka; x++){
+            wejscie.read((char*)&kolor8bit, sizeof(Uint8));
+            kolor = z8Kdo24K(kolor8bit);
+            setPixel(x + (szerokosc / 2), y, kolor.r, kolor.g, kolor. b);
+        }
 
     SDL_UpdateWindowSurface(window);
 }
@@ -66,7 +154,7 @@ void zapiszPlik8() {
     char identyfikator[] = "DG"
 
     cout<<"Zapisujemy plik 'obraz8.bin' uzywajac metody write()"<<endl;
-    ofstream wyjscie("obraz8.bin", ios:binary);
+    ofstream wyjscie("obraz8.bin", std::ios_base::binary);
     wyjscie.write((char*)&identyfikator, sizeof());
     wyjscie.write((char*)&szerokoscObrazka, sizeof());
     wyjscie.write((char*)&wysokoscObrazka, sizeof());
