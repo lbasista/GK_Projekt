@@ -6,8 +6,11 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <cmath>
-#include "GK2025-MedianCut.h"
 using namespace std;
+
+void czyscPalete();
+void narysujPalete3b(int px, int py, SDL_Color pal3b[]);
+void narysujPalete(int px, int py, SDL_Color pal[]);
 
 void narzuconaV1();
 void narzuconaV2();
@@ -22,5 +25,5 @@ void narzucona5KS();
 void narysujPalete5KS(int px, int py, int rozmiarBloku);
 
 void paletaMedianCutBW();
-void narysujPalete3b(int px, int py, SDL_Color pal3b[]);
+
 #endif // GK2025_PALETA_H_INCLUDED

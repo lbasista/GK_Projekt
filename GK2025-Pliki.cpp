@@ -35,11 +35,8 @@ void zapiszPlik(){
             wyjscie.write((char*)&kolor5bit, sizeof(Uint8));
         }
     }
-
     wyjscie.close();
-
     SDL_UpdateWindowSurface(window);
-
 }
 
 void zapiszPlikv0(){
@@ -64,9 +61,7 @@ void zapiszPlikv0(){
             Uint8 kolor5bit = ((kolor.r >> 6) << 4) | ((kolor.g >> 6) << 2) | (kolor.b >> 7);
             wyjscie << kolor5bit;
             }
-
     wyjscie.close();
-
     SDL_UpdateWindowSurface(window);
 }
 
@@ -108,7 +103,6 @@ void odczytajPlik() {
             setPixel(x + (szerokosc / 2), y, kolor.r, kolor.g, kolor.b);
         }
     }
-
     SDL_UpdateWindowSurface(window);
 }
 
@@ -141,7 +135,6 @@ void odczytajPlik8(){
             kolor = z8Kdo24K(kolor8bit);
             setPixel(x + (szerokosc / 2), y, kolor.r, kolor.g, kolor. b);
         }
-
     SDL_UpdateWindowSurface(window);
 }
 

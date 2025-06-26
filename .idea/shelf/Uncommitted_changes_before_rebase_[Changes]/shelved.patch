@@ -1,0 +1,85 @@
+Index: GK2025-Funkcje.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>// podstawowe funkcje\n#include \"GK2025-Funkcje.h\"\n#include \"GK2025-Zmienne.h\"\n#include \"GK2025-Paleta.h\"\n#include \"GK2025-MedianCut.h\"\n#include \"GK2025-Pliki.h\"\n\n\nvoid Funkcja1() {\n\n    narzuconaV1();\n    SDL_UpdateWindowSurface(window);\n}\n\nvoid Funkcja2() {\n\n narzuconaV2();\n\n    SDL_UpdateWindowSurface(window);\n}\n\nvoid Funkcja3() {\n\n narzuconaV3();\n\n    SDL_UpdateWindowSurface(window);\n}\n\nvoid Funkcja4() {\n\n    //...\n\n    SDL_UpdateWindowSurface(window);\n}\n\nvoid Funkcja5() {\n\n    //...\n\n    SDL_UpdateWindowSurface(window);\n}\n\nvoid Funkcja6() {\n    narzucona5KS();\n    narysujPalete5KS(0, 210, 16);\n    SDL_UpdateWindowSurface(window);\n}\n\nvoid Funkcja7() {\n\n    //paletaMedianCutBW();\n    SDL_UpdateWindowSurface(window);\n}\n\nvoid Funkcja8() {\n\n    //...\n\n    SDL_UpdateWindowSurface(window);\n}\n\nvoid Funkcja9() {\n\n    zapiszPlikv0();\n\n    SDL_UpdateWindowSurface(window);\n}\n\n\n\nvoid setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B)\n{\n  if ((x>=0) && (x<szerokosc) && (y>=0) && (y<wysokosc))\n  {\n    /* Zamieniamy poszczególne składowe koloru na format koloru piksela */\n    Uint32 pixel = SDL_MapRGB(screen->format, R, G, B);\n\n    /* Pobieramy informację ile bajtów zajmuje jeden piksel */\n    int bpp = screen->format->BytesPerPixel;\n\n    /* Obliczamy adres piksela */\n    Uint8 *p1 = (Uint8 *)screen->pixels + (y*2) * screen->pitch + (x*2) * bpp;\n    Uint8 *p2 = (Uint8 *)screen->pixels + (y*2+1) * screen->pitch + (x*2) * bpp;\n    Uint8 *p3 = (Uint8 *)screen->pixels + (y*2) * screen->pitch + (x*2+1) * bpp;\n    Uint8 *p4 = (Uint8 *)screen->pixels + (y*2+1) * screen->pitch + (x*2+1) * bpp;\n\n    /* Ustawiamy wartość piksela, w zależnoœci od formatu powierzchni*/\n    switch(bpp)\n    {\n        case 1: //8-bit\n            *p1 = pixel;\n            *p2 = pixel;\n            *p3 = pixel;\n            *p4 = pixel;\n            break;\n\n        case 2: //16-bit\n            *(Uint16 *)p1 = pixel;\n            *(Uint16 *)p2 = pixel;\n            *(Uint16 *)p3 = pixel;\n            *(Uint16 *)p4 = pixel;\n            break;\n\n        case 3: //24-bit\n            if(SDL_BYTEORDER == SDL_BIG_ENDIAN) {\n                p1[0] = (pixel >> 16) & 0xff;\n                p1[1] = (pixel >> 8) & 0xff;\n                p1[2] = pixel & 0xff;\n                p2[0] = (pixel >> 16) & 0xff;\n                p2[1] = (pixel >> 8) & 0xff;\n                p2[2] = pixel & 0xff;\n                p3[0] = (pixel >> 16) & 0xff;\n                p3[1] = (pixel >> 8) & 0xff;\n                p3[2] = pixel & 0xff;\n                p4[0] = (pixel >> 16) & 0xff;\n                p4[1] = (pixel >> 8) & 0xff;\n                p4[2] = pixel & 0xff;\n            } else {\n                p1[0] = pixel & 0xff;\n                p1[1] = (pixel >> 8) & 0xff;\n                p1[2] = (pixel >> 16) & 0xff;\n                p2[0] = pixel & 0xff;\n                p2[1] = (pixel >> 8) & 0xff;\n                p2[2] = (pixel >> 16) & 0xff;\n                p3[0] = pixel & 0xff;\n                p3[1] = (pixel >> 8) & 0xff;\n                p3[2] = (pixel >> 16) & 0xff;\n                p4[0] = pixel & 0xff;\n                p4[1] = (pixel >> 8) & 0xff;\n                p4[2] = (pixel >> 16) & 0xff;\n            }\n            break;\n\n        case 4: //32-bit\n            *(Uint32 *)p1 = pixel;\n            *(Uint32 *)p2 = pixel;\n            *(Uint32 *)p3 = pixel;\n            *(Uint32 *)p4 = pixel;\n            break;\n\n        }\n    }\n}\n\nvoid setPixelSurface(int x, int y, Uint8 R, Uint8 G, Uint8 B)\n{\n  if ((x>=0) && (x<szerokosc*2) && (y>=0) && (y<wysokosc*2))\n  {\n    /* Zamieniamy poszczególne składowe koloru na format koloru piksela */\n    Uint32 pixel = SDL_MapRGB(screen->format, R, G, B);\n\n    /* Pobieramy informację ile bajtów zajmuje jeden piksel */\n    int bpp = screen->format->BytesPerPixel;\n\n    /* Obliczamy adres piksela */\n    Uint8 *p = (Uint8 *)screen->pixels + y * screen->pitch + x * bpp;\n\n    /* Ustawiamy wartość piksela, w zależności od formatu powierzchni*/\n    switch(bpp)\n    {\n        case 1: //8-bit\n            *p = pixel;\n            break;\n\n        case 2: //16-bit\n            *(Uint16 *)p = pixel;\n            break;\n\n        case 3: //24-bit\n            if(SDL_BYTEORDER == SDL_BIG_ENDIAN) {\n                p[0] = (pixel >> 16) & 0xff;\n                p[1] = (pixel >> 8) & 0xff;\n                p[2] = pixel & 0xff;\n            } else {\n                p[0] = pixel & 0xff;\n                p[1] = (pixel >> 8) & 0xff;\n                p[2] = (pixel >> 16) & 0xff;\n            }\n            break;\n\n        case 4: //32-bit\n            *(Uint32 *)p = pixel;\n            break;\n        }\n    }\n}\n\nSDL_Color getPixel(int x, int y) {\n    SDL_Color color ;\n    Uint32 col = 0 ;\n    if ((x>=0) && (x<szerokosc) && (y>=0) && (y<wysokosc)) {\n        //określamy pozycję\n        char* pPosition=(char*)screen->pixels ;\n\n        //przesunięcie względem y\n        pPosition+=(screen->pitch*y*2) ;\n\n        //przesunięcie względem x\n        pPosition+=(screen->format->BytesPerPixel*x*2);\n\n        //kopiujemy dane piksela\n        memcpy(&col, pPosition, screen->format->BytesPerPixel);\n\n        //konwertujemy kolor\n        SDL_GetRGB(col, screen->format, &color.r, &color.g, &color.b);\n    }\n    return ( color ) ;\n}\n\nSDL_Color getPixelSurface(int x, int y, SDL_Surface *surface) {\n    SDL_Color color ;\n    Uint32 col = 0 ;\n    if ((x>=0) && (x<szerokosc) && (y>=0) && (y<wysokosc)) {\n        //określamy pozycję\n        char* pPosition=(char*)surface->pixels ;\n\n        //przesunięcie względem y\n        pPosition+=(surface->pitch*y) ;\n\n        //przesunięcie względem x\n        pPosition+=(surface->format->BytesPerPixel*x);\n\n        //kopiujemy dane piksela\n        memcpy(&col, pPosition, surface->format->BytesPerPixel);\n\n        //konwertujemy kolor\n        SDL_GetRGB(col, surface->format, &color.r, &color.g, &color.b);\n    }\n    return ( color ) ;\n}\n\n\nvoid ladujBMP(char const* nazwa, int x, int y) {\n    SDL_Surface* bmp = SDL_LoadBMP(nazwa);\n    if (!bmp)\n    {\n        printf(\"Unable to load bitmap: %s\\n\", SDL_GetError());\n    }\n    else\n    {\n        SDL_Color kolor;\n        for (int yy=0; yy<bmp->h; yy++) {\n\t\t\tfor (int xx=0; xx<bmp->w; xx++) {\n\t\t\t\tkolor = getPixelSurface(xx, yy, bmp);\n\t\t\t\tsetPixel(xx, yy, kolor.r, kolor.g, kolor.b);\n\t\t\t}\n        }\n\t\tSDL_FreeSurface(bmp);\n        SDL_UpdateWindowSurface(window);\n    }\n\n}\n\n\nvoid czyscEkran(Uint8 R, Uint8 G, Uint8 B)\n{\n    SDL_FillRect(screen, 0, SDL_MapRGB(screen->format, R, G, B));\n    SDL_UpdateWindowSurface(window);\n}\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GK2025-Funkcje.cpp b/GK2025-Funkcje.cpp
+--- a/GK2025-Funkcje.cpp	(revision fef7cd42d666b2905e151ae100bf047a05129f9e)
++++ b/GK2025-Funkcje.cpp	(date 1747484595655)
+@@ -4,7 +4,7 @@
+ #include "GK2025-Paleta.h"
+ #include "GK2025-MedianCut.h"
+ #include "GK2025-Pliki.h"
+-
++#include <SDL2/SDL.h>
+ 
+ void Funkcja1() {
+ 
+Index: .gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>### C++ template\n# Prerequisites\n*.d\n\n# Compiled Object files\n*.slo\n*.lo\n*.o\n*.obj\n\n# Precompiled Headers\n*.gch\n*.pch\n\n# Compiled Dynamic libraries\n*.so\n*.dylib\n*.dll\n\n# Fortran module files\n*.mod\n*.smod\n\n# Compiled Static libraries\n*.lai\n*.la\n*.a\n*.lib\n\n# Executables\n*.exe\n*.out\n*.app\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.gitignore b/.gitignore
+--- a/.gitignore	(revision fef7cd42d666b2905e151ae100bf047a05129f9e)
++++ b/.gitignore	(date 1748687782128)
+@@ -32,3 +32,8 @@
+ *.out
+ *.app
+ 
++/SDL2/
++!/GK2025-Projekt.cbp
++!/GK2025-Projekt.depend
++
++!/GK2025-Projekt.layout
+Index: GK2025-Pliki.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>// funkcje do operacji na plikach\n#include \"GK2025-Funkcje.h\"\n#include \"GK2025-Zmienne.h\"\n#include \"GK2025-Paleta.h\"\n#include \"GK2025-MedianCut.h\"\n#include \"GK2025-Pliki.h\"\n\nvoid zapiszPlik(){\n    SDL_Color kolor;\n    Uint16 szerokoscObrazka = szerokosc / 2;\n    Uint16 wysokoscObrazka = wysokosc / 2;\n    Uint8  ileBitow = 24;\n\n    char identyfikator[] = \"DG\";\n\n    cout << \"Zapisujemy plik 'obrazRGB.bin' uzywajac metody write()\" << endl;\n    ofstream wyjscie ('obrazRGB.bin', ios::binary);\n    wyjscie.write((char*)&identyfikator, sizeof(char)*2);\n    wyjscie.write((char*)&szerokoscObrazka, sizeof(Uint16));\n    wyjscie.write((char*)&wysokoscObrazka, sizeof(Uint16));\n    wyjscie.write((char*)&ileBitow, sizeof(Uint8));\n\n    for (int y=0; y<wysokoscObrazka; y++) {\n        for (int x=0; x<wysokoscObrazka; x++) {\n            kolor = getPixel(x,y);\n            wyjscie.write((char*)&kolor, sizeof(Uint8)*3);\n\n            wyjscie.write((char*)&kolor.r, sizeof(Uint8));\n            wyjscie.write((char*)&kolor.g, sizeof(Uint8));\n            wyjscie.write((char*)&kolor.b, sizeof(Uint8));\n        }\n    }\n\n    wyjscie.close();\n\n    SDL_UpdateWindowSurface(window);\n\n}\n\nvoid zapiszPlikv0(){\n    SDL_Color kolor;\n    Uint16 szerokoscObrazka = szerokosc / 2;\n    Uint16 wysokoscObrazka = wysokosc / 2;\n    Uint8 ileBitow = 24;\n\n    std::cout << \"Zapisujemy plik 'obraz.bin' uzywajac operatora <<\" << std::endl;\n    ofstream wyjscie(\"obraz.bin\");\n\n    wyjscie << \"DG\";\n    wyjscie << (Uint8)(szerokoscObrazka) << (Uint8)(szerokoscObrazka >> 8);\n    wyjscie << (Uint8)(wysokoscObrazka) << (Uint8)(wysokoscObrazka >> 8);\n    wyjscie << ileBitow;\n\n    for(int y = 0; y < wysokoscObrazka; y++)\n        for(int x = 0; x < szerokoscObrazka; x++){\n            kolor = getPixel(x,y);\n            wyjscie << kolor.r << kolor.g << kolor.b;\n            }\n\n    wyjscie.close();\n\n    SDL_UpdateWindowSurface(window);\n}\n\nvoid odczytajPlik() {\n    SDL_Color kolor;\n    Uint16 szerokoscObrazka = 0;\n    Uint16 wysokoscObrazka = 0;\n    Uint8 ileBitow = 0;\n    char identyfikator[] = \"  \";\n\n    cout << \"Odczytujemy plik 'obrazRGB.bin' uzywajac metody read()\";\n    ifstream wejscie(\"obrazRGB.bin\", ios::binary);\n\n    wejscie.read((char*)&identyfikator, sizeof(char)*2);\n    wejscie.read((char*)&szerokoscObrazka, sizeof(Uint16));\n    wejscie.read((char*)&wysokoscObrazka, sizeof(Uint16));\n    wejscie.read((char*)&ileBitow, sizeof(Uint8));\n\n    cout << \"id: \" << identyfikator << endl;\n    cout << \"szerokosc: \" << wysokoscObrazka << endl;\n    cout << \"wysokosc: \" << szerokoscObrazka << endl;\n    cout << \"ile bitow: \" << ileBitow << endl;\n\n    for (int y=0; y<wysokoscObrazka; y++) {\n        for (int x=0; x<szerokoscObrazka; x++) {\n            wejscie.read((char*)&kolor, sizeof(Uint8)*3);\n            setPixel(x+(szerokosc/2), y, kolor.r, kolor.g, kolor.b);\n        }\n    }\n\n    SDL_UpdateWindowSurface(window);\n}\n\n\nvoid odczytajPlik8(){\n    SDL_Kolor kolor;\n    Uint8 kolor8bit = 0;\n    Uint16 szerokoscObrazka = 0;\n    Uint16 wysokoscObrazka = 0;\n    Uint8 ileBitow = 0;\n    char identyfikator[] = \"  \";\n\n    std::cout << \"Odczytujemy plik 'obraz8.bin' uzywajac metody read()\" std::endl;\n\n    ifstream wejscie(\"obraz8.bin\", ios::binary);\n\n    wejscie.read((chart*)&identyfikator, sizeof(char) + 2);\n    wejscie.read((chart*)&szerokoscObrazka, sizeof(Uint16));\n    wejscie.read((chart*)&wysokoscObrazka, sizeof(Uint16);\n    wejscie.read((chart*)&ileBitow, sizeof(Uint8));\n\n    std::cout << \"id: \" << identyfikator << std::endl;\n    std::cout << \"szerokosc: \" << szerokoscObrazka << std::endl;\n    std::cout << \"wysokosc: \" << wysokoscObrazka << std::endl;\n    std::cout << \"ile bitow: \" <<(int)ileBitow << std::endl;\n\n    for (int y = 0; y < wysokoscObrazka; y++)\n        for (int x = 0; x < szerokoscObrazka; x++){\n            wejscie.read((char*)&kolor8bit, sizeof(Uint8));\n            kolor = z8Kdo24K(kolor8bit);\n            setPixel(x + (szerokosc / 2), y, kolor.r, kolor.g, kolor. b);\n        }\n\n    SDL_UpdateWindowSurface(window);\n}\n\nvoid zapiszPlik8() {\n    SDL_Color kolor;\n    Uint8 kolor8bit;\n    Uint16 szerokoscObrazka = szerokosc/2;\n    Uint16 wysokoscObrazka = wysokosc/2;\n    Uint8 ileBitow = 8;\n    char identyfikator[] = \"DG\"\n\n    cout<<\"Zapisujemy plik 'obraz8.bin' uzywajac metody write()\"<<endl;\n    ofstream wyjscie(\"obraz8.bin\", ios:binary);\n    wyjscie.write((char*)&identyfikator, sizeof());\n    wyjscie.write((char*)&szerokoscObrazka, sizeof());\n    wyjscie.write((char*)&wysokoscObrazka, sizeof());\n    wyjscie.write((char*)&ileBitow, sizeof());\n\n    for (int y=0; y<wysokoscObrazka; y++) {\n        for (int x=0; x<szerokoscObrazka; x++) {\n            kolor = getPixel(x, y);\n            kolor8bit = z24Kdo8K(kolor);\n            wyjscie.write((char*)&kolor8bit, sizeof(Uint8));\n        }\n    }\n    wyjscie.close();\n    SDL_UpdateWindowSurface(window);\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GK2025-Pliki.cpp b/GK2025-Pliki.cpp
+--- a/GK2025-Pliki.cpp	(revision fef7cd42d666b2905e151ae100bf047a05129f9e)
++++ b/GK2025-Pliki.cpp	(date 1747484937858)
+@@ -94,21 +94,21 @@
+ 
+ 
+ void odczytajPlik8(){
+-    SDL_Kolor kolor;
++    SDL_Color kolor;
+     Uint8 kolor8bit = 0;
+     Uint16 szerokoscObrazka = 0;
+     Uint16 wysokoscObrazka = 0;
+     Uint8 ileBitow = 0;
+     char identyfikator[] = "  ";
+ 
+-    std::cout << "Odczytujemy plik 'obraz8.bin' uzywajac metody read()" std::endl;
++    std::cout << "Odczytujemy plik 'obraz8.bin' uzywajac metody read()" << std::endl;
+ 
+     ifstream wejscie("obraz8.bin", ios::binary);
+ 
+-    wejscie.read((chart*)&identyfikator, sizeof(char) + 2);
+-    wejscie.read((chart*)&szerokoscObrazka, sizeof(Uint16));
+-    wejscie.read((chart*)&wysokoscObrazka, sizeof(Uint16);
+-    wejscie.read((chart*)&ileBitow, sizeof(Uint8));
++    wejscie.read((char*)&identyfikator, sizeof(char) + 2);
++    wejscie.read((char*)&szerokoscObrazka, sizeof(Uint16));
++    wejscie.read((char*)&wysokoscObrazka, sizeof(Uint16));
++    wejscie.read((char*)&ileBitow, sizeof(Uint8));
+ 
+     std::cout << "id: " << identyfikator << std::endl;
+     std::cout << "szerokosc: " << szerokoscObrazka << std::endl;
+@@ -134,7 +134,7 @@
+     char identyfikator[] = "DG"
+ 
+     cout<<"Zapisujemy plik 'obraz8.bin' uzywajac metody write()"<<endl;
+-    ofstream wyjscie("obraz8.bin", ios:binary);
++    ofstream wyjscie("obraz8.bin", std::ios_base::binary);
+     wyjscie.write((char*)&identyfikator, sizeof());
+     wyjscie.write((char*)&szerokoscObrazka, sizeof());
+     wyjscie.write((char*)&wysokoscObrazka, sizeof());
