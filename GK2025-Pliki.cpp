@@ -9,7 +9,8 @@ void zapiszPlik(){
     SDL_Color kolor;
     Uint16 szerokoscObrazka = szerokosc / 2;
     Uint16 wysokoscObrazka = wysokosc / 2;
-    Uint8  ileBitow = 24;
+    //Uint8  ileBitow = 24;
+    Uint8  ileBitow = 5; //Format r2g2b1
 
     char identyfikator[] = "DG";
 
@@ -23,25 +24,27 @@ void zapiszPlik(){
     for (int y=0; y<wysokoscObrazka; y++) {
         for (int x=0; x<wysokoscObrazka; x++) {
             kolor = getPixel(x,y);
-            wyjscie.write((char*)&kolor, sizeof(Uint8)*3);
+            //wyjscie.write((char*)&kolor, sizeof(Uint8)*3);
 
-            wyjscie.write((char*)&kolor.r, sizeof(Uint8));
-            wyjscie.write((char*)&kolor.g, sizeof(Uint8));
-            wyjscie.write((char*)&kolor.b, sizeof(Uint8));
+            //wyjscie.write((char*)&kolor.r, sizeof(Uint8));
+            //wyjscie.write((char*)&kolor.g, sizeof(Uint8));
+            //wyjscie.write((char*)&kolor.b, sizeof(Uint8));
+
+            //Redukcja do r2g2b1
+            Uint8 kolor5bit = ((kolor.r >> 6) << 4) | ((kolor.g >> 6) << 2) | (kolor.b >> 7);
+            wyjscie.write((char*)&kolor5bit, sizeof(Uint8));
         }
     }
-
     wyjscie.close();
-
     SDL_UpdateWindowSurface(window);
-
 }
 
 void zapiszPlikv0(){
     SDL_Color kolor;
     Uint16 szerokoscObrazka = szerokosc / 2;
     Uint16 wysokoscObrazka = wysokosc / 2;
-    Uint8 ileBitow = 24;
+    //Uint8 ileBitow = 24;
+    Uint8 ileBitow = 5;
 
     std::cout << "Zapisujemy plik 'obraz.bin' uzywajac operatora <<" << std::endl;
     ofstream wyjscie("obraz.bin");
@@ -54,11 +57,11 @@ void zapiszPlikv0(){
     for(int y = 0; y < wysokoscObrazka; y++)
         for(int x = 0; x < szerokoscObrazka; x++){
             kolor = getPixel(x,y);
-            wyjscie << kolor.r << kolor.g << kolor.b;
+            //wyjscie << kolor.r << kolor.g << kolor.b;
+            Uint8 kolor5bit = ((kolor.r >> 6) << 4) | ((kolor.g >> 6) << 2) | (kolor.b >> 7);
+            wyjscie << kolor5bit;
             }
-
     wyjscie.close();
-
     SDL_UpdateWindowSurface(window);
 }
 
@@ -84,11 +87,22 @@ void odczytajPlik() {
 
     for (int y=0; y<wysokoscObrazka; y++) {
         for (int x=0; x<szerokoscObrazka; x++) {
-            wejscie.read((char*)&kolor, sizeof(Uint8)*3);
-            setPixel(x+(szerokosc/2), y, kolor.r, kolor.g, kolor.b);
+            //wejscie.read((char*)&kolor, sizeof(Uint8)*3);
+            Uint8 kolor5bit;
+            wejscie.read((char*)&kolor5bit, sizeof(Uint8));
+
+            //Odtwarzanie 24-bit z 5-bit
+            Uint8 r2 = (kolor5bit >> 4) & 0x03;
+            Uint8 g2 = (kolor5bit >> 2) & 0x03;
+            Uint8 b1 = kolor5bit & 0x01;
+
+            kolor.r = r2 * 85; //0, 85, 170, 255
+            kolor.g = g2 * 85;
+            kolor.b = b1 * 255;
+
+            setPixel(x + (szerokosc / 2), y, kolor.r, kolor.g, kolor.b);
         }
     }
-
     SDL_UpdateWindowSurface(window);
 }
 
@@ -121,7 +135,6 @@ void odczytajPlik8(){
             kolor = z8Kdo24K(kolor8bit);
             setPixel(x + (szerokosc / 2), y, kolor.r, kolor.g, kolor. b);
         }
-
     SDL_UpdateWindowSurface(window);
 }
 
