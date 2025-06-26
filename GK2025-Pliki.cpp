@@ -15,7 +15,7 @@ void zapiszPlik(){
     char identyfikator[] = "DG";
 
     cout << "Zapisujemy plik 'obrazRGB.bin' uzywajac metody write()" << endl;
-    ofstream wyjscie ('obrazRGB.bin', ios::binary);
+    ofstream wyjscie ("obrazRGB.bin", ios::binary);
     wyjscie.write((char*)&identyfikator, sizeof(char)*2);
     wyjscie.write((char*)&szerokoscObrazka, sizeof(Uint16));
     wyjscie.write((char*)&wysokoscObrazka, sizeof(Uint16));
@@ -144,14 +144,14 @@ void zapiszPlik8() {
     Uint16 szerokoscObrazka = szerokosc/2;
     Uint16 wysokoscObrazka = wysokosc/2;
     Uint8 ileBitow = 8;
-    char identyfikator[] = "DG"
+    char identyfikator[] = "DG";
 
     cout<<"Zapisujemy plik 'obraz8.bin' uzywajac metody write()"<<endl;
     ofstream wyjscie("obraz8.bin", std::ios_base::binary);
-    wyjscie.write((char*)&identyfikator, sizeof());
-    wyjscie.write((char*)&szerokoscObrazka, sizeof());
-    wyjscie.write((char*)&wysokoscObrazka, sizeof());
-    wyjscie.write((char*)&ileBitow, sizeof());
+    wyjscie.write((char*)&identyfikator, sizeof(char)*2);
+    wyjscie.write((char*)&szerokoscObrazka, sizeof(Uint16));
+    wyjscie.write((char*)&wysokoscObrazka, sizeof(Uint16));
+    wyjscie.write((char*)&ileBitow, sizeof(Uint8));
 
     for (int y=0; y<wysokoscObrazka; y++) {
         for (int x=0; x<szerokoscObrazka; x++) {
