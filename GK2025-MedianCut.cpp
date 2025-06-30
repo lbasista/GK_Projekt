@@ -4,6 +4,10 @@
 #include "GK2025-Funkcje.h"
 #include "GK2025-Paleta.h"
 
+#include <iostream>
+#include  <vector>
+#include <array>
+
 using namespace std;
 
 Uint8 najwiekszaRoznica(int start, int koniec){
@@ -108,38 +112,62 @@ void sortujKubelek(int start, int koniec, Uint8 sortowanie){
     }
 }
 
-void MedianCutBW(int start, int koniec, int iteracja){
-    for(int i = 0; i < iteracja; i++) std::cout << "  ";
-
-    std::cout << "start: " << start << ", koniec: " << koniec << ", iteracja: " << iteracja << std::endl;
-
-    if(iteracja > 0){
-
+void MedianCutBW(int start, int koniec, int iteracja) {
+    if (iteracja > 0) {
         sortujKubelekBW(start, koniec);
-        for(int i = 0; i < iteracja; i++) std::cout << "  ";
-
-        std::cout << "Dzielimy kubelek na poziomie " << iteracja << std::endl;
-
         int srodek = (start + koniec + 1) / 2;
-
-        MedianCutBW(start, srodek - 1, iteracja - 1);
-        MedianCutBW(srodek, koniec, iteracja - 1);
+        MedianCutBW(start,     srodek - 1, iteracja - 1);
+        MedianCutBW(srodek,    koniec,     iteracja - 1);
     } else {
-        int sumaBW = 0;
+        // Obliczamy średnią jasność w kubełku
+        int suma = 0;
+        for (int i = start; i <= koniec; ++i)
+            suma += obrazekS[i];
+        Uint8 noweBW = Uint8(suma / (koniec + 1 - start));
 
-        for (int p = start; p <= koniec; p++)
-            sumaBW += obrazekS[p];
+        // ręczne przypisanie każdej składowej SDL_Color
+        SDL_Color nowyKolor;
+        nowyKolor.r = noweBW;
+        nowyKolor.g = noweBW;
+        nowyKolor.b = noweBW;
+        nowyKolor.a = 255;
 
-        Uint8 noweBW = sumaBW / (koniec + 1 - start);
-        SDL_Color nowyKolor = { noweBW, noweBW, noweBW};
-        paleta8s[ileKubelkow] = nowyKolor;
+        paleta8s[ileKubelkow++] = nowyKolor;
+    }
+}
 
-        std::cout << "Kubelek " << ileKubelkow << ": ";
-        std::cout << "(s:" << start << ", k:" << koniec << ", e:" << (koniec + 1 - start) << ")";
-        std::cout << std::endl;
-        std::cout << "Kolor " << ileKubelkow << ": (" << (int)nowyKolor.r << ",";
-        std::cout << (int)nowyKolor.g << "," << (int)nowyKolor.b << ")" << std::endl;
-        ileKubelkow++;
+void MedianCut(int start, int koniec, int iteracja) {
+    if (iteracja > 0) {
+        Uint8 sortowanie = najwiekszaRoznica(start, koniec);
+        sortujKubelek(start, koniec, sortowanie);
+        int srodek = (start + koniec + 1) / 2;
+        MedianCut(start,    srodek - 1, iteracja - 1);
+        MedianCut(srodek,   koniec,     iteracja - 1);
+    } else {
+        // Obliczamy średnie R/G/B w kubełku
+        int sumaR = 0, sumaG = 0, sumaB = 0;
+        for (int i = start; i <= koniec; ++i) {
+            sumaR += obrazekK[i].r;
+            sumaG += obrazekK[i].g;
+            sumaB += obrazekK[i].b;
+        }
+        int count = koniec + 1 - start;
+        Uint8 sredniaR = Uint8(sumaR / count);
+        Uint8 sredniaG = Uint8(sumaG / count);
+        Uint8 sredniaB = Uint8(sumaB / count);
+
+        // ręczne przypisanie każdej składowej SDL_Color
+        SDL_Color nowyKolor;
+        nowyKolor.r = sredniaR;
+        nowyKolor.g = sredniaG;
+        nowyKolor.b = sredniaB;
+        nowyKolor.a = 255;
+
+        paleta8k[ileKubelkow++] = nowyKolor;
+
+        // (opcjonalnie) nadpisanie obrazekK[p] na nowyKolor, jeśli potrzebne
+        for (int p = start; p <= koniec; ++p)
+            obrazekK[p] = nowyKolor;
     }
 }
 
@@ -171,7 +199,7 @@ void paletaMedianCutBW() {
                      paleta8s[indeks].r, paleta8s[indeks].g, paleta8s[indeks].b);
         }
 
-    narysujPalete3b(0, 210, paleta8s);
+    narysujPalete5KS(0, 210, paleta8s);
     SDL_UpdateWindowSurface(window);
 }
 
@@ -206,52 +234,116 @@ void paletaMedianCut() {
     SDL_UpdateWindowSurface(window);
 }
 
-void MedianCut(int start, int koniec, int iteracja){
-    for(int i = 0; i < iteracja; i ++) std::cout << "  ";
-    std::cout << "start: " << start << ", koniec: " << koniec << ", iteracja:" << iteracja << std::endl;
-    if(iteracja > 0){
-        Uint8 sortowanie = najwiekszaRoznica(start, koniec);
-        switch(sortowanie){
-            case 1: std::cout << "sortujemy wedlug R" << std::endl;
-                    break;
-            case 2: std::cout << "sortujemy wedlug G" << std::endl;
-                    break;
-            case 3: std::cout << "sortujemy wedlug B" << std::endl;
-                    break;
-        }
+// MedianCutBW + Floyd–Steinberg → paleta BW 32 poziomy
+void paletaMedianCutBWFloyd() {
+    int w = szerokosc/2, h = wysokosc/2;
+    vector<vector<float>> buf(h, vector<float>(w));
+    for(int y=0; y<h; ++y)
+        for(int x=0; x<w; ++x)
+            buf[y][x] = 0.299f*getPixel(x,y).r
+                      + 0.587f*getPixel(x,y).g
+                      + 0.114f*getPixel(x,y).b;
 
-        sortujKubelek(start, koniec, sortowanie);
-
-        for (int i = 0; i < iteracja; i++) std::cout << "  ";
-        std::cout << "Dzielimy kubelek na poziomie " << iteracja << std::endl;
-
-        int srodek = (start + koniec + 1) / 2;
-
-        MedianCut(start, srodek - 1, iteracja - 1);
-        MedianCut(srodek, koniec, iteracja - 1);
-    } else {
-        int sumaR = 0, sumaG = 0, sumaB =0;
-        for(int p = start; p <= koniec; p++){
-            sumaR += obrazekK[p].r;
-            sumaG += obrazekK[p].g;
-            sumaB += obrazekK[p].b;
-        }
-
-        int sredniaR = sumaR / (koniec + 1 - start);
-        int sredniaG = sumaG / (koniec + 1 - start);
-        int sredniaB = sumaB / (koniec + 1 - start);
-
-        SDL_Color nowyKolor = {sredniaR, sredniaG, sredniaB};
-        paleta8k[ileKubelkow] = nowyKolor;
-
-        for (int p = start; p <= koniec; p++)
-            obrazekK[p] = nowyKolor;
-
-        std::cout << "Kubelek " << ileKubelkow << ": ";
-        std::cout << "(s: " << start << ", k:" << koniec << ", e:" << (koniec + 1 - start) << ")";
-        std::cout << std::endl;
-        std::cout << "Kolor " << ileKubelkow << ": (" << (int)nowyKolor.r << ",";
-        std::cout << (int)nowyKolor.g << "," << (int)nowyKolor.b << ")" << std::endl;
-        ileKubelkow++;
+    // przygotowanie palety BW
+    ileKubelkow = ileKolorow = 0;
+    czyscPalete();
+    int n = w*h;
+    for(int i=0; i<n; ++i) obrazekS[i] = Uint8(buf[i/w][i%w]);
+    MedianCutBW(0, n-1, 5);
+    // wymuszenie 5-bitowego zakresu
+    for(int k=0; k<ileKubelkow; ++k) {
+        Uint8 idx5 = z24Kdo5KS(paleta8s[k]);
+        paleta8s[k] = z5KSdo24K(idx5);
     }
+
+    // Floyd–Steinberg
+    for(int y=0; y<h; ++y) {
+        for(int x=0; x<w; ++x) {
+            float old = buf[y][x];
+            int best = 0; float md = fabsf(old - paleta8s[0].r);
+            for(int k=1; k<ileKubelkow; ++k) {
+                float d = fabsf(old - paleta8s[k].r);
+                if(d < md) { md = d; best = k; }
+            }
+            float neu = paleta8s[best].r;
+            SDL_Color q = paleta8s[best];
+            setPixel(x, y + h, q.r, q.g, q.b);
+            float err = old - neu;
+            if(x+1 < w)           buf[y][x+1]   += err * 7.0f/16.0f;
+            if(x-1 >= 0 && y+1<h) buf[y+1][x-1] += err * 3.0f/16.0f;
+            if(y+1 < h)           buf[y+1][x]   += err * 5.0f/16.0f;
+            if(x+1<w && y+1<h)    buf[y+1][x+1] += err * 1.0f/16.0f;
+        }
+    }
+
+    // legenda 32 odcieni tuż poniżej ditheringu
+    narysujPalete5KS(0, h +10, paleta8s);
+    SDL_UpdateWindowSurface(window);
+}
+
+// MedianCut (RGB) + Floyd–Steinberg → paleta kolorowa 2-2-1
+void paletaMedianCutColorFloyd() {
+    int w = szerokosc/2, h = wysokosc/2;
+    vector<vector<array<float,3>>> buf(h, vector<array<float,3>>(w));
+    for(int y=0; y<h; ++y)
+        for(int x=0; x<w; ++x) {
+            SDL_Color c = getPixel(x,y);
+            buf[y][x] = { float(c.r), float(c.g), float(c.b) };
+        }
+
+    // przygotowanie palety kolorowej
+    ileKubelkow = ileKolorow = 0;
+    czyscPalete();
+    int n = w*h;
+    for(int i=0; i<n; ++i) obrazekK[i] = getPixel(i % w, i / w);
+    MedianCut(0, n-1, 5);
+    // wymuszenie 2-2-1 bitów
+    for(int k=0; k<ileKubelkow; ++k) {
+        Uint8 idx5 = z24Kdo5C(paleta8k[k]);
+        paleta8k[k] = z5Cdo24K(idx5);
+    }
+
+    // Floyd–Steinberg
+    for(int y=0; y<h; ++y) {
+        for(int x=0; x<w; ++x) {
+            auto old = buf[y][x];
+            int best = 0; float md = 1e12f;
+            for(int k=0; k<ileKubelkow; ++k) {
+                SDL_Color p = paleta8k[k];
+                float dr = old[0]-p.r, dg = old[1]-p.g, db = old[2]-p.b;
+                float d2 = dr*dr + dg*dg + db*db;
+                if(d2 < md) { md = d2; best = k; }
+            }
+            SDL_Color q = paleta8k[best];
+            // <-- przesunięcie: prawo o w, dół o h
+            setPixel(x + w, y + h, q.r, q.g, q.b);
+            float errR = old[0] - q.r;
+            float errG = old[1] - q.g;
+            float errB = old[2] - q.b;
+            if(x+1 < w) {
+                buf[y][x+1][0] += errR * 7.0f/16.0f;
+                buf[y][x+1][1] += errG * 7.0f/16.0f;
+                buf[y][x+1][2] += errB * 7.0f/16.0f;
+            }
+            if(x-1>=0 && y+1<h) {
+                buf[y+1][x-1][0] += errR * 3.0f/16.0f;
+                buf[y+1][x-1][1] += errG * 3.0f/16.0f;
+                buf[y+1][x-1][2] += errB * 3.0f/16.0f;
+            }
+            if(y+1 < h) {
+                buf[y+1][x][0]   += errR * 5.0f/16.0f;
+                buf[y+1][x][1]   += errG * 5.0f/16.0f;
+                buf[y+1][x][2]   += errB * 5.0f/16.0f;
+            }
+            if(x+1<w && y+1<h) {
+                buf[y+1][x+1][0] += errR * 1.0f/16.0f;
+                buf[y+1][x+1][1] += errG * 1.0f/16.0f;
+                buf[y+1][x+1][2] += errB * 1.0f/16.0f;
+            }
+        }
+    }
+
+    // legenda 32 kolorów
+    narysujPalete5KS(w, h +10, paleta8k);
+    SDL_UpdateWindowSurface(window);
 }

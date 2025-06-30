@@ -68,23 +68,23 @@ int main(int argc, char* argv[]) {
                 if (event.key.keysym.sym == SDLK_9)
                     Funkcja9();
                 if (event.key.keysym.sym == SDLK_a)
-                    ladujBMP("obrazek1.bmp", 0, 0);
+                    ladujBMP("../obrazek1.bmp", 0, 0);
                 if (event.key.keysym.sym == SDLK_s)
-                    ladujBMP("obrazek2.bmp", 0, 0);
+                    ladujBMP("../obrazek2.bmp", 0, 0);
                 if (event.key.keysym.sym == SDLK_d)
-                    ladujBMP("obrazek3.bmp", 0, 0);
+                    ladujBMP("../obrazek3.bmp", 0, 0);
                 if (event.key.keysym.sym == SDLK_f)
-                    ladujBMP("obrazek4.bmp", 0, 0);
+                    ladujBMP("../obrazek4.bmp", 0, 0);
                 if (event.key.keysym.sym == SDLK_g)
-                    ladujBMP("obrazek5.bmp", 0, 0);
+                    ladujBMP("../obrazek5.bmp", 0, 0);
                 if (event.key.keysym.sym == SDLK_h)
-                    ladujBMP("obrazek6.bmp", 0, 0);
+                    ladujBMP("../obrazek6.bmp", 0, 0);
                 if (event.key.keysym.sym == SDLK_j)
-                    ladujBMP("obrazek7.bmp", 0, 0);
+                    ladujBMP("../obrazek7.bmp", 0, 0);
                 if (event.key.keysym.sym == SDLK_k)
-                    ladujBMP("obrazek8.bmp", 0, 0);
+                    ladujBMP("../obrazek8.bmp", 0, 0);
                 if (event.key.keysym.sym == SDLK_l)
-                    ladujBMP("obrazek9.bmp", 0, 0);
+                    ladujBMP("../obrazek9.bmp", 0, 0);
                 if (event.key.keysym.sym == SDLK_b)
                     czyscEkran(0, 0, 0);
                 else

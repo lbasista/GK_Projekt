@@ -9,12 +9,13 @@
 #include <SDL2/SDL.h>
 
 void zapiszPlikv0();
-
-// Czesc Arturka
 void zapisPlik();
 
 void odczytajPlik();
 void zapiszPlik8();
+
+void zapiszPlik5Bit(const char* filename);
+void odczytajPlik5Bit(const char* filename);
 
 #endif // GK2025_PLIKI_H_INCLUDED
 

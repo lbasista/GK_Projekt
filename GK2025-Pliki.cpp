@@ -163,3 +163,59 @@ void zapiszPlik8() {
     wyjscie.close();
     SDL_UpdateWindowSurface(window);
 }
+
+void zapiszPlik5Bit(const char* filename) {
+    ofstream f(filename, ios::binary);
+    Uint16 w = szerokosc/2, h = wysokosc/2;
+    char id[2] = {'D','G'};
+    Uint8 nbit = 5;
+    f.write(id,2);
+    f.write((char*)&w, sizeof(w));
+    f.write((char*)&h, sizeof(h));
+    f.write((char*)&nbit,1);
+    for(int y=0; y<h; ++y) {
+        for(int x=0; x<w; x+=8) {
+            Uint8 block[8];
+            for(int i=0;i<8;++i){
+                SDL_Color c = getPixel(x+i,y);
+                block[i] = z24Kdo5C(c);
+            }
+            // bit–plane
+            for(int b=0;b<5;++b){
+                Uint8 byte = 0;
+                for(int i=0;i<8;++i){
+                    byte |= ((block[i]>>b)&1) << i;
+                }
+                f.put(byte);
+            }
+        }
+    }
+    f.close();
+}
+
+void odczytajPlik5Bit(const char* filename) {
+    ifstream f(filename, ios::binary);
+    char id[2];
+    Uint16 w,h;
+    Uint8 nbit;
+    f.read(id,2);
+    f.read((char*)&w,sizeof(w));
+    f.read((char*)&h,sizeof(h));
+    f.read((char*)&nbit,1);
+    for(int y=0; y<h; ++y) {
+        for(int x=0; x<w; x+=8) {
+            Uint8 block[8] = {0};
+            for(int b=0;b<5;++b){
+                Uint8 plane = (Uint8)f.get();
+                for(int i=0;i<8;++i){
+                    block[i] |= ((plane>>i)&1) << b;
+                }
+            }
+            for(int i=0;i<8;++i){
+                SDL_Color c = z5Cdo24K(block[i]);
+                setPixel(x+i, y, c.r,c.g,c.b);
+            }
+        }
+    }
+    SDL_UpdateWindowSurface(window);
+}

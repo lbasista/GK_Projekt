@@ -7,66 +7,49 @@
 #include <SDL2/SDL.h>
 
 void Funkcja1() {
-
-    narzuconaV1();
+    narzucona5bColor();
     SDL_UpdateWindowSurface(window);
 }
 
 void Funkcja2() {
-
- narzuconaV2();
-
+    paletaDedykowana5b();
     SDL_UpdateWindowSurface(window);
 }
 
 void Funkcja3() {
-
- narzuconaV3();
-
+    narzucona5KS();
     SDL_UpdateWindowSurface(window);
 }
 
 void Funkcja4() {
-
-    //...
-
+    narzucona5bGrayDither();
     SDL_UpdateWindowSurface(window);
 }
 
 void Funkcja5() {
-
-    //...
-
+    narzucona5bColorDither();
     SDL_UpdateWindowSurface(window);
 }
 
 void Funkcja6() {
-    narzucona5KS();
-    narysujPalete5KS(0, 210, 16);
+    paletaMedianCutColorFloyd();
     SDL_UpdateWindowSurface(window);
 }
 
 void Funkcja7() {
-
-    //paletaMedianCutBW();
+    paletaMedianCutBWFloyd();
     SDL_UpdateWindowSurface(window);
 }
 
 void Funkcja8() {
-
-    //...
-
+    zapiszPlik5Bit("plik.5bit");
     SDL_UpdateWindowSurface(window);
 }
 
 void Funkcja9() {
-
-    zapiszPlikv0();
-
+    odczytajPlik5Bit("plik.5bit");
     SDL_UpdateWindowSurface(window);
 }
-
-
 
 void setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B)
 {
