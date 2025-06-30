@@ -2,7 +2,7 @@
 #ifndef GK2025_ZMIENNE_H_INCLUDED
 #define GK2025_ZMIENNE_H_INCLUDED
 
-#define tytul "GK2025 - Projekt - Zespol XX"
+#define tytul "GK2025 - Projekt - Zespol 12"
 
 #include <SDL2/SDL.h>
 

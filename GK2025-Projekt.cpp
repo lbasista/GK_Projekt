@@ -1,10 +1,11 @@
 // główny plik projektu
+// menu wyswietlamy poprzez wcisniecie klawisza m
+// specyfikacja formatu dg-5 znajduje sie w komentarzu w GK2025-Pliki.cpp
 #include "GK2025-Zmienne.h"
 #include "GK2025-Funkcje.h"
 #include "GK2025-Paleta.h"
-#include "GK2025-MedianCut.h"
+#include "GK2025-Menu.h"
 
-#include <exception>
 #include <string.h>
 #include <iostream>
 #include <stdio.h>
@@ -49,6 +50,9 @@ int main(int argc, char* argv[]) {
                 // wychodzimy, gdy wciśnięto ESC
                 if (event.key.keysym.sym == SDLK_ESCAPE)
                     done = true;
+                //NASZE MENU
+                if (event.key.keysym.sym == SDLK_m)
+                    handleMenu();
                 if (event.key.keysym.sym == SDLK_1)
                     Funkcja1();
                 if (event.key.keysym.sym == SDLK_2)

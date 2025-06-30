@@ -164,6 +164,66 @@ void zapiszPlik8() {
     SDL_UpdateWindowSurface(window);
 }
 
+/*Specyfikacja formatu DG-5
+
+Offset | Rozmiar | Znaczenie
+––––––––––––––––––––––––––––––––––––––––––––––––––––
+0      | 2B      | identyfikator ASCII: "DG"
+2      | 2B      | szerokość obrazu (uint16, little-endian)
+4      | 2B      | wysokość obrazu (uint16, little-endian)
+6      | 1B      | liczba bitów/piksel (wartość 5)
+7      |         | dane pikseli: jeden bajt na piksel,
+                 | gdzie bity [4..3] = R₂, [2..1] = G₂, [0] = B₁,
+                 | pozostałe bity w bajcie nieużywane
+*/
+
+void zapiszPlikDG5(const char* filename) {
+    ofstream f(filename, ios::binary);
+    Uint16 w = szerokosc/2, h = wysokosc/2;
+    char id[2] = {'D','G'};
+    Uint8 nbit = 5;
+    f.write(id,2);
+    f.write((char*)&w, sizeof(w));
+    f.write((char*)&h, sizeof(h));
+    f.write((char*)&nbit,1);
+
+    for(int y=0; y<h; ++y){
+        for(int x=0; x<w; ++x){
+            SDL_Color c = getPixel(x,y);
+            Uint8 pix = ((c.r>>6)<<3) | ((c.g>>6)<<1) | (c.b>>7);
+            f.put((char)pix);
+        }
+    }
+    f.close();
+}
+
+void odczytajPlikDG5(const char* filename) {
+    ifstream f(filename, ios::binary);
+    char id[2];
+    Uint16 w,h;
+    Uint8 nbit;
+    f.read(id,2);
+    f.read((char*)&w,sizeof(w));
+    f.read((char*)&h,sizeof(h));
+    f.read((char*)&nbit,1);
+
+    for(int y=0; y<h; ++y){
+        for(int x=0; x<w; ++x){
+            Uint8 pix = (Uint8)f.get();
+            Uint8 r2 = (pix>>3)&0x03;
+            Uint8 g2 = (pix>>1)&0x03;
+            Uint8 b1 =  pix    &0x01;
+            SDL_Color c;
+            c.r = r2 * 85;
+            c.g = g2 * 85;
+            c.b = b1 * 255;
+            setPixel(x, y, c.r, c.g, c.b);
+        }
+    }
+    SDL_UpdateWindowSurface(window);
+}
+
+
 void zapiszPlik5Bit(const char* filename) {
     ofstream f(filename, ios::binary);
     Uint16 w = szerokosc/2, h = wysokosc/2;
